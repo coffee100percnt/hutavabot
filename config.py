@@ -1,6 +1,6 @@
 # Токен бота в Discord
 # Как получить: https://www.writebots.com/discord-bot-token/
-token = "ВСТАВЬТЕ_ТОКЕН_СЮДА"
+token = "ODYxNTc0MzIwNjgxMzg1OTg0.YOLxnQ.B8TE2Fscdf4ftCw9IjNOOh2u3QM"
 
 # С какой вероятностью бот отправит сообщение, если обнаружит сообщение с его упоминанием (от 0 до 1)
 mention_prob = 1  # 100%
