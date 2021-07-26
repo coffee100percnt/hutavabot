@@ -28,6 +28,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: req install
         run: pip install -r requirements.txt
+      - name: gpu req
         run: pip install -r requirements_gpu.txt
       - name: deploy
         run: python3 bot.py
