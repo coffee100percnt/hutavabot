@@ -8,14 +8,14 @@ guild = discord.Guild
 
 token = 'ODYxNTc0MzIwNjgxMzg1OTg0.YOLxnQ.LTsffwXW2bWhzIZagq7hHgYmTdM'
 
-@bot.event()
+@bot.event
 async def on_command_error(ctx, error):
     async with ctx.typing():
-        asyncio.sleep(1)
-    if isinstance(error, MissingPermissions):
-        ctx.send("фемка не имеешь права🤣🤣")
-    if isinstance(error, MissingRequiredArgument):
-        ctx.send("а аргументы.")
+        await asyncio.sleep(1)
+        if isinstance(error, MissingPermissions):
+            await ctx.send("фемка не имеешь права🤣🤣")
+        if isinstance(error, MissingRequiredArgument):
+            await ctx.send("а аргументы.")
 
 @bot.command()
 @commands.has_permissions(ban_members = True)
