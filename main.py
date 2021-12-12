@@ -16,12 +16,18 @@ async def on_command_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("а аргументы.")
 
+@bot.event
+async def on_ready():
+    bot.add_command(name="ban", description="Банит участника. ```*ban <user> [reason]```")
+    bot.add_command(name="kick", description="Кикает участника. ```*kick <user>```")
+
+
 @bot.command()
 @commands.has_permissions(ban_members = True)
-async def ban(ctx, usr, *, reason='пошёл нахуй'):
+async def ban(ctx, usr, *, reasn='пошёл нахуй'):
     async with ctx.typing():
-        await usr.send(f"Вы были забанены с {ctx.guild.name} по причине {reason}")
-        await ctx.ban(user=usr)
+        await usr.send(f"Вы были забанены с {ctx.guild.name} по причине {reasn}")
+        await ctx.guild.ban(user=usr, reason=f"{reasn} ({ctx.author.name})")
         await ctx.send('Ок, забанил')
 
 @bot.command()
@@ -29,7 +35,7 @@ async def ban(ctx, usr, *, reason='пошёл нахуй'):
 async def kick(ctx, usr):
     async with ctx.typing():
         await usr.send(f"Вы были кикнуты с {ctx.guild.name}")
-        await usr.kick(user=usr)
+        await ctx.guild.kick(user=usr)
         await ctx.send('Ок, кикнул')
 
 @bot.command()
