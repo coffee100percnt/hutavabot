@@ -24,10 +24,10 @@ async def on_ready():
 
 @bot.command()
 @commands.has_permissions(ban_members = True)
-async def ban(ctx, usr, *, reasn='пошёл нахуй'):
+async def ban(ctx, usr: discord.Member, *, reasn='пошёл нахуй'):
     async with ctx.typing():
         await usr.send(f"Вы были забанены с {ctx.guild.name} по причине {reasn}")
-        await ctx.guild.ban(user=usr, reason=f"{reasn} ({ctx.author.name})")
+        await usr.ban(reason=f"{reasn} ({ctx.author.name})")
         await ctx.send('Ок, забанил')
 
 @bot.command()
