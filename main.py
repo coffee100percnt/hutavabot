@@ -9,31 +9,36 @@ def check_if_it_is_me(ctx):
 
 @bot.event
 async def on_command_error(ctx, error):
-    async with ctx.typing():
-        if isinstance(error, commands.MissingPermissions):
-            await ctx.send("фемка не имеешь права🤣🤣")
-        if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("а аргументы.")
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.respond("фемка не имеешь права🤣🤣")
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.respond("а аргументы.")
+    if isinstance(error, commands.errors.ApplicationCommandInvokeError):
+        ctx.respond('ай да блять ебучие ошибки нахуй!!!')
 
-@bot.slash_command()
+@bot.event
+async def on_ready():
+    await bot.sync_commands()
+
+@bot.slash_command(name="ban", description="Ban a member")
 @commands.has_permissions(ban_members = True)
-async def ban(ctx, usr:discord.Member, *, reasn='пошёл нахуй'):
-    async with ctx.typing():
-        await usr.send(f"Вы былы забанены с {ctx.guild.name} по причине {reasn}")
-        await usr.ban(user=usr, reason=f"{reasn} ({ctx.author.name})")
-        await ctx.send('Ок, забанил')
+async def ban(ctx, member:discord.Member, *, reason='пошёл нахуй'):
+    await ctx.create_dm(member.id)
+    await member.send(f"Вы былы забанены с {ctx.guild.name} по причине {reason}")
+    await member.ban(reason=f"{reason} ({ctx.author.name})")
+    await ctx.respond('Ок, забанил')
 
-@bot.slash_command()
+@bot.slash_command(name="kick", description="Kick a member")
 @commands.has_permissions(kick_members = True)
-async def kick(ctx, usr:discord.Member):
-    async with ctx.typing():
-        await usr.send(f"Вы были кикнуты с {ctx.guild.name}")
-        await ctx.guild.kick(user=usr)
-        await ctx.send('Ок, кикнул')
+async def kick(ctx, member:discord.Member):
+    await ctx.create_dm(member.id)
+    await member.send(f"Вы были кикнуты с {ctx.guild.name}")
+    await member.kick()
+    await ctx.respond('Ок, кикнул')
 
-@bot.slash_command()
-@commands.check(check_if_it_is_me)
-async def cock(ctx, *, command):
-    await eval(command)
+# @bot.command()
+# @commands.check(check_if_it_is_me)
+# async def cock(ctx, *, command):
+#     await eval(command)
     
 bot.run(token)
