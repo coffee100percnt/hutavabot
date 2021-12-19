@@ -18,7 +18,15 @@ async def on_command_error(ctx, error):
 
 @bot.event
 async def on_ready():
-    await bot.sync_commands()
+    presence = discord.BaseActivity(name="секс с конки")
+    # await bot.change_presence(status=discord.Status.dnd, activity=presence) 
+    await bot.change_presence(status=discord.Status.dnd)
+
+@bot.event
+async def on_connect():
+    # await bot.sync_commands()
+    await bot.register_commands()
+    # девелоперы ебанулись им лень делать синк 
 
 @bot.slash_command(name="ban", description="Ban a member")
 @commands.has_permissions(ban_members = True)
@@ -35,6 +43,15 @@ async def kick(ctx, member:discord.Member):
     await member.send(f"Вы были кикнуты с {ctx.guild.name}")
     await member.kick()
     await ctx.respond('Ок, кикнул')
+
+@bot.slash_command()
+@commands.has_permissions(ban_members = True)
+async def unban(ctx, id):
+    membr = await ctx.fetch_(id)
+    await membr.unban()
+
+    await ctx.respond()
+
 
 # @bot.command()
 # @commands.check(check_if_it_is_me)
