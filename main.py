@@ -47,7 +47,7 @@ async def kick(ctx, member:discord.Member):
 async def unban(ctx, id):
     membr = await ctx.fetch_member(id)
     await membr.unban()
-    await ctx.send(f"Разбанил {membr.name}#{membr.discriminator}")
+    await ctx.respond()
 
 
 # @bot.command()
