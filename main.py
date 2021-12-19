@@ -49,7 +49,6 @@ async def kick(ctx, member:discord.Member):
 async def unban(ctx, id):
     membr = await ctx.fetch_(id)
     await membr.unban()
-
     await ctx.respond()
 
 
