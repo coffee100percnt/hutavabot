@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 
-bot = discord.Bot()
+bot = commands.Bot(command_prefix="*")
 
 token = 'ODYxNTc0MzIwNjgxMzg1OTg0.YOLxnQ.LTsffwXW2bWhzIZagq7hHgYmTdM'
 def check_if_it_is_me(ctx):
@@ -10,47 +10,44 @@ def check_if_it_is_me(ctx):
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.MissingPermissions):
-        await ctx.respond("фемка не имеешь права🤣🤣")
+        await ctx.send("фемка не имеешь права🤣🤣")
     if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.respond("а аргументы.")
-    if isinstance(error, commands.errors.ApplicationCommandInvokeError):
-        ctx.respond('ай да блять ебучие ошибки нахуй!!!')
+        await ctx.send("а аргументы.")
 
 @bot.event
 async def on_ready():
-    presence = discord.BaseActivity(name="секс с конки")
-    # await bot.change_presence(status=discord.Status.dnd, activity=presence) 
-    await bot.change_presence(status=discord.Status.dnd)
+    presence = discord.Game("секс с конки")
+    await bot.change_presence(status=discord.Status.dnd, activity=presence) 
+    print("Bot is ready!")
 
-@bot.event
-async def on_connect():
+# @bot.event
+# async def on_connect():
     # await bot.sync_commands()
-    await bot.register_commands()
+    # await bot.register_commands()
     # девелоперы ебанулись им лень делать синк 
 
-@bot.slash_command(name="ban", description="Ban a member")
+@bot.command()
 @commands.has_permissions(ban_members = True)
 async def ban(ctx, member:discord.Member, *, reason='пошёл нахуй'):
+    await member.ban(reason=f"{reason} ({ctx.author.name})")
+    await ctx.send('Ок, забанил')
     await ctx.create_dm(member.id)
     await member.send(f"Вы былы забанены с {ctx.guild.name} по причине {reason}")
-    await member.ban(reason=f"{reason} ({ctx.author.name})")
-    await ctx.respond('Ок, забанил')
 
-@bot.slash_command(name="kick", description="Kick a member")
+@bot.command()
 @commands.has_permissions(kick_members = True)
 async def kick(ctx, member:discord.Member):
+    await member.kick()
+    await ctx.send('Ок, кикнул')
     await ctx.create_dm(member.id)
     await member.send(f"Вы были кикнуты с {ctx.guild.name}")
-    await member.kick()
-    await ctx.respond('Ок, кикнул')
 
-@bot.slash_command()
+@bot.command()
 @commands.has_permissions(ban_members = True)
 async def unban(ctx, id):
-    membr = await ctx.fetch_(id)
+    membr = await ctx.fetch_member(id)
     await membr.unban()
-
-    await ctx.respond()
+    await ctx.send(f"Разбанил {membr.name}#{membr.discriminator}")
 
 
 # @bot.command()
