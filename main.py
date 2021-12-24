@@ -26,6 +26,7 @@ async def on_ready():
 async def on_connect():
     # await bot.sync_commands()
     await bot.register_commands()
+    await print("Commands are ready!")
     # девелоперы ебанулись им лень делать синк 
 
 @bot.slash_command(name="ban", description="Ban a member")
@@ -47,9 +48,9 @@ async def kick(ctx, member:discord.Member):
 @bot.slash_command()
 @commands.has_permissions(ban_members = True)
 async def unban(ctx, id):
-    membr = await ctx.fetch_(id)
+    membr = await ctx.fetch_member(id)
     await membr.unban()
-    await ctx.respond()
+    await ctx.respond("Ок, разбанил")
 
 
 # @bot.command()
