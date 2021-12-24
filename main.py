@@ -23,7 +23,8 @@ async def on_ready():
 # @bot.event
 # async def on_connect():
     # await bot.sync_commands()
-    # await bot.register_commands()
+    await bot.register_commands()
+    await print("Commands are ready!")
     # девелоперы ебанулись им лень делать синк 
 
 @bot.command()
@@ -47,7 +48,7 @@ async def kick(ctx, member:discord.Member):
 async def unban(ctx, id):
     membr = await ctx.fetch_member(id)
     await membr.unban()
-    await ctx.respond()
+    await ctx.respond("Ок, разбанил")
 
 
 # @bot.command()
@@ -56,3 +57,4 @@ async def unban(ctx, id):
 #     await eval(command)
     
 bot.run(token)
+
