@@ -18,7 +18,7 @@ async def on_command_error(ctx, error):
 
 @bot.event
 async def on_ready():
-    presence = discord.BaseActivity(name="секс с конки")
+    # presence = discord.BaseActivity(name="секс с конки")
     # await bot.change_presence(status=discord.Status.dnd, activity=presence) 
     await bot.change_presence(status=discord.Status.dnd)
 
@@ -26,7 +26,7 @@ async def on_ready():
 async def on_connect():
     # await bot.sync_commands()
     await bot.register_commands()
-    await print("Commands are ready!")
+    print("Commands are ready!")
     # девелоперы ебанулись им лень делать синк 
 
 @bot.slash_command(name="ban", description="Ban a member")
@@ -48,9 +48,11 @@ async def kick(ctx, member:discord.Member):
 @bot.slash_command()
 @commands.has_permissions(ban_members = True)
 async def unban(ctx, id):
-    membr = await ctx.fetch_member(id)
-    await membr.unban()
-    await ctx.respond("Ок, разбанил")
+    banned_users = await ctx.guild.bans()
+    for ban_entry in banned_users:
+        user = ban_entry.user
+        if user.id == id:
+            ctx.guild.unban(user)
 
 
 # @bot.command()
