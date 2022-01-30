@@ -3,7 +3,7 @@ from discord.ext import commands
 
 bot = discord.Bot()
 
-token = 'ODYxNTc0MzIwNjgxMzg1OTg0.YOLxnQ.LTsffwXW2bWhzIZagq7hHgYmTdM'
+token = ''
 def check_if_it_is_me(ctx):
     return ctx.message.author.id == 335102389017378818
 
@@ -18,7 +18,7 @@ async def on_command_error(ctx, error):
 
 @bot.event
 async def on_ready():
-    presence = discord.BaseActivity(name="секс с конки")
+    # presence = discord.BaseActivity(name="секс с конки")
     # await bot.change_presence(status=discord.Status.dnd, activity=presence) 
     await bot.change_presence(status=discord.Status.dnd)
 
@@ -26,6 +26,7 @@ async def on_ready():
 async def on_connect():
     # await bot.sync_commands()
     await bot.register_commands()
+    print("Commands are ready!")
     # девелоперы ебанулись им лень делать синк 
 
 @bot.slash_command(name="ban", description="Ban a member")
@@ -47,10 +48,11 @@ async def kick(ctx, member:discord.Member):
 @bot.slash_command()
 @commands.has_permissions(ban_members = True)
 async def unban(ctx, id):
-    membr = await ctx.fetch_(id)
-    await membr.unban()
-
-    await ctx.respond()
+    banned_users = await ctx.guild.bans()
+    for ban_entry in banned_users:
+        user = ban_entry.user
+        if user.id == id:
+            ctx.guild.unban(user)
 
 
 # @bot.command()
