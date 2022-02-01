@@ -1,9 +1,10 @@
 import discord
 from discord.ext import commands
+import os
 
-bot = commands.Bot(command_prefix="*")
+bot = discord.Bot()
 
-token = ''
+token = os.environ.get('API_TOKEN')
 def check_if_it_is_me(ctx):
     return ctx.message.author.id == 335102389017378818
 
@@ -27,7 +28,7 @@ async def on_ready():
     print("Commands are ready!")
     # девелоперы ебанулись им лень делать синк 
 
-@bot.command()
+@bot.slash_command()
 @commands.has_permissions(ban_members = True)
 async def ban(ctx, member:discord.Member, *, reason='пошёл нахуй'):
     await member.ban(reason=f"{reason} ({ctx.author.name})")
@@ -35,7 +36,7 @@ async def ban(ctx, member:discord.Member, *, reason='пошёл нахуй'):
     await ctx.create_dm(member.id)
     await member.send(f"Вы былы забанены с {ctx.guild.name} по причине {reason}")
 
-@bot.command()
+@bot.slash_command()
 @commands.has_permissions(kick_members = True)
 async def kick(ctx, member:discord.Member):
     await member.kick()
@@ -43,7 +44,7 @@ async def kick(ctx, member:discord.Member):
     await ctx.create_dm(member.id)
     await member.send(f"Вы были кикнуты с {ctx.guild.name}")
 
-@bot.command()
+@bot.slash_command()
 @commands.has_permissions(ban_members = True)
 async def unban(ctx, id):
     banned_users = await ctx.guild.bans()
