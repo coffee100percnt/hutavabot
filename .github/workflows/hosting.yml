@@ -13,7 +13,8 @@ jobs:
     environment: hosting
     steps:
       - name: req
-        run: pwd;ls
+        run: pwd
+        run: ls
       - name: deploy
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
