@@ -13,7 +13,7 @@ jobs:
     environment: hosting
     steps:
       - name: req
-        run: pip install -r ../requirements.txt
+        run: pwd;ls
       - name: deploy
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
