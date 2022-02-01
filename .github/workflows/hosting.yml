@@ -12,8 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: hosting
     steps:
-      - name: req
+      - name: pwd
         run: pwd
+      - name: ls
         run: ls
       - name: deploy
         env:
