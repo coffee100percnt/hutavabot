@@ -3,8 +3,9 @@ name: Deployment
 concurrency: hosting
 
 on:
-  schedule:
-    - cron:  '0 0,6,12,18 * * *'
+  push:
+    branches:
+      master
 
 jobs:
   deployment:
@@ -12,4 +13,6 @@ jobs:
     environment: hosting
     steps:
       - name: req
-        
+        run: pip install -r requirements.txt
+      - name: deploy
+        run: python main.py&
