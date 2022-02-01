@@ -3,7 +3,7 @@ from discord.ext import commands
 
 bot = commands.Bot(command_prefix="*")
 
-token = 'ODYxNTc0MzIwNjgxMzg1OTg0.YOLxnQ.LTsffwXW2bWhzIZagq7hHgYmTdM'
+token = ''
 def check_if_it_is_me(ctx):
     return ctx.message.author.id == 335102389017378818
 
