@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: hosting
     steps:
-      - name: pwd
+      - uses: actions/checkout@v2
+      - name: req
         run: pip install -r requirements.txt
       - name: deploy
         env:
