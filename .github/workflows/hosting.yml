@@ -4,18 +4,15 @@ concurrency: hosting
 
 on:
   push:
-    branches:
-      master
+    branches: [ master ]
 
 jobs:
-  deployment:
+  build:
     runs-on: ubuntu-latest
     environment: hosting
     steps:
       - name: pwd
-        run: pwd
-      - name: ls
-        run: ls
+        run: pip install -r requirements.txt
       - name: deploy
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
