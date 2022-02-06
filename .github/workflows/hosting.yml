@@ -16,4 +16,4 @@ jobs:
       - name: deploy
         env:
           API_TOKEN: ${{ secrets.API_TOKEN }}
-        run: python main.py&
+        run: python main.py
