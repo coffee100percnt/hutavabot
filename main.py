@@ -3,6 +3,7 @@ from discord.ext import commands
 import os
 import datetime
 import pandas
+from dice import roll as rollmydice
 
 bot = discord.Bot()
 token = os.getenv('API_TOKEN')
@@ -61,8 +62,8 @@ async def unban(ctx, id):
 @bot.slash_command()
 @commands.has_permissions(moderate_members = True)
 async def mute(ctx, member:discord.Member, time="10m", reason=None):
-    ttime = pandasd.Timedelta(time).to_pytimedelta()
-    await member.timeout_for(ttime, reason)
+    ttime = pandas.Timedelta(time).to_pytimedelta()
+    await member.timeout_for(ttime)
     await ctx.respond(f"{member.name} посидить {torelativetime(time)}без права голосу")
 
 @bot.slash_command()
@@ -70,6 +71,10 @@ async def mute(ctx, member:discord.Member, time="10m", reason=None):
 async def unmute(ctx, member:discord.Member):
     await member.remove_timeout()
     await ctx.respond(f"{member.name} повернено право голосу.")
+
+@bot.slash_command()
+async def dice(ctx, roll: str):
+    await ctx.respond(str(rollmydice(roll)))
 
 # @bot.command()
 # @commands.check(check_if_it_is_me)
