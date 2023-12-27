@@ -4,6 +4,7 @@ import os
 import datetime
 import pandas
 from dice import roll as rollmydice
+from random import randint
 
 bot = discord.Bot()
 token = os.getenv('API_TOKEN')
@@ -74,7 +75,19 @@ async def unmute(ctx, member:discord.Member):
 
 @bot.slash_command()
 async def dice(ctx, roll: str):
-    await ctx.respond(str(rollmydice(roll)))
+    await ctx.respond(
+        str(
+            rollmydice(roll)
+            )
+        )
+
+@bot.slash_command()
+async def random(ctx, smallest: int, highest: int):
+    await ctx.respond(
+        str(
+            randint(smallest, highest)
+            )
+        )
 
 # @bot.command()
 # @commands.check(check_if_it_is_me)
