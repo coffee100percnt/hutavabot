@@ -30,12 +30,6 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.dnd, activity=presence) 
     print("Bot is ready!")
 
-# @bot.event
-# async def on_connect():
-    # await bot.sync_commands()
-    await bot.register_commands()
-    print("Commands are ready!")
-    # девелоперы ебанулись им лень делать синк 
 
 #region Moderation
 modcategory = bot.create_group("moderation", "Commands for moderating your server")
