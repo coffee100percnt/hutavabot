@@ -1,7 +1,6 @@
 import discord
 from discord.ext import commands
 import os
-import datetime
 import pandas
 from dice import roll as rollmydice
 from random import randint
@@ -10,7 +9,7 @@ bot = discord.Bot()
 token = os.getenv('API_TOKEN')
 
 def check_if_it_is_me(ctx):
-    return ctx.message.author.id == 335102389017378818
+    return ctx.user.id == 335102389017378818
 def torelativetime(interval):
     a = interval.replace("d", " днів ")
     b = a.replace("w", " тижнів ")
@@ -77,22 +76,16 @@ async def unmute(ctx, member:discord.Member):
 @bot.slash_command()
 async def dice(ctx, roll: str):
     await ctx.respond(
-        str(
-            rollmydice(roll)
-            )
-        )
+        str(rollmydice(roll)))
 
 @bot.slash_command()
 async def random(ctx, smallest: int, highest: int):
     await ctx.respond(
-        str(
-            randint(smallest, highest)
-            )
-        )
+        str(randint(smallest, highest)))
 
-# @bot.command()
+# @bot.slash_command()
 # @commands.check(check_if_it_is_me)
 # async def cock(ctx, *, command):
-#     await eval(command)
+#     eval(command)
 
 bot.run(str(token))
