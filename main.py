@@ -37,7 +37,9 @@ async def on_ready():
     print("Commands are ready!")
     # девелоперы ебанулись им лень делать синк 
 
-@bot.slash_command()
+#region Moderation
+modcategory = bot.create_group("moderation", "Commands for moderating your server")
+@modcategory.command()
 @commands.has_permissions(ban_members = True)
 async def ban(ctx, member:discord.Member, reason='іді нахуй'):
     await member.ban(reason=f"{reason} ({ctx.author.name})")
@@ -45,7 +47,7 @@ async def ban(ctx, member:discord.Member, reason='іді нахуй'):
     await ctx.create_dm(member.id)
     await member.send(f"Ви були вигнані з {ctx.guild.name} з причини {reason}")
 
-@bot.slash_command()
+@modcategory.command()
 @commands.has_permissions(kick_members = True)
 async def kick(ctx, member:discord.Member):
     await member.kick()
@@ -53,37 +55,42 @@ async def kick(ctx, member:discord.Member):
     await ctx.create_dm(member.id)
     await member.send(f"Ви були вигнані {ctx.guild.name}")
 
-@bot.slash_command()
+@modcategory.command()
 @commands.has_permissions(ban_members = True)
 async def unban(ctx, id):
     membr = await ctx.fetch_member(id)
     await membr.unban()
     await ctx.respond(f"{membr.name} може повертатись на сервер.")
 
-@bot.slash_command()
+@modcategory.command()
 @commands.has_permissions(moderate_members = True)
 async def mute(ctx, member:discord.Member, time="10m", reason=None):
     ttime = pandas.Timedelta(time).to_pytimedelta()
     await member.timeout_for(ttime)
     await ctx.respond(f"{member.name} посидить {torelativetime(time)}без права голосу")
 
-@bot.slash_command()
+@modcategory.command()
 @commands.has_permissions(moderate_members = True)
 async def unmute(ctx, member:discord.Member):
     await member.remove_timeout()
     await ctx.respond(f"{member.name} повернено право голосу.")
+#endregion Moderation
 
-@bot.slash_command()
+#region Fun
+funcategory = bot.create_group("fun", "Fun commands")
+
+@bot.command()
 async def dice(ctx, roll: str):
     await ctx.respond(
         str(rollmydice(roll)))
 
-@bot.slash_command()
+@bot.command()
 async def random(ctx, smallest: int, highest: int):
     await ctx.respond(
         str(randint(smallest, highest)))
+#endregion Fun
 
-# @bot.slash_command()
+# @bot.command()
 # @commands.check(check_if_it_is_me)
 # async def cock(ctx, *, command):
 #     eval(command)
