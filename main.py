@@ -51,39 +51,39 @@ def refresh_guildbase():
 modcategory = bot.create_group("moderation", "Commands for moderating your server")
 @modcategory.command()
 @commands.has_guild_permissions(ban_members = True)
-async def ban(ctx, member:discord.Member, reason='іді нахуй'):
-    await member.ban(reason=f"{reason} ({ctx.author.name})")
-    await ctx.respond(f'{member.name} вигнано з сервера.')
+async def ban(ctx, member:discord.Member):
+    await member.ban(reason=f"{ctx.author.name} did this")
+    await ctx.respond(localize.ban[ggl(ctx)].format(member.display_name))
     await ctx.create_dm(member.id)
-    await member.send(f"Ви були вигнані з {ctx.guild.name} з причини {reason}")
-
-@modcategory.command()
-@commands.has_guild_permissions(kick_members = True)
-async def kick(ctx, member:discord.Member):
-    await member.kick()
-    await ctx.respond(f'{member.name} вигнано з сервера.')
-    await ctx.create_dm(member.id)
-    await member.send(f"Ви були вигнані {ctx.guild.name}")
+    await member.send(localize.bandm[ggl(ctx)].format(ctx.guild.name))
 
 @modcategory.command()
 @commands.has_guild_permissions(ban_members = True)
 async def unban(ctx, id):
     membr = await ctx.fetch_member(id)
     await membr.unban()
-    await ctx.respond(f"{membr.name} може повертатись на сервер.")
+    await ctx.respond(localize.unban[ggl(ctx)].format(membr.display_name))
+
+@modcategory.command()
+@commands.has_guild_permissions(kick_members = True)
+async def kick(ctx, member:discord.Member):
+    await member.kick()
+    await ctx.respond(localize.kick[ggl(ctx)].format(member.display_name))
+    await ctx.create_dm(member.id)
+    await member.send(localize.kickdm[ggl(ctx)].format(ctx.guild.name))
 
 @modcategory.command()
 @commands.has_guild_permissions(moderate_members = True)
 async def mute(ctx, member:discord.Member, time="10m", reason=None):
     ttime = pandas.Timedelta(time).to_pytimedelta()
     await member.timeout_for(ttime)
-    await ctx.respond(f"{member.name} посидить {to_relative_time(time)}без права голосу")
+    await ctx.respond(localize.mute[ggl(ctx)].format(member.display_name, to_relative_time(ctx, time)))
 
 @modcategory.command()
 @commands.has_guild_permissions(moderate_members = True)
 async def unmute(ctx, member:discord.Member):
     await member.remove_timeout()
-    await ctx.respond(f"{member.name} повернено право голосу.")
+    await ctx.respond(localize.unmute[ggl(ctx)].format(member.display_name))
 #endregion Moderation
 
 #region Settings
@@ -104,15 +104,14 @@ funcategory = bot.create_group("fun", "Fun commands")
 
 @funcategory.command()
 async def dice(ctx, roll: str):
-    await ctx.respond(
-        str(rollmydice(roll)))
+    await ctx.respond(str(rollmydice(roll)))
 
 @bot.command()
 async def random(ctx, smallest: int, highest: int):
-    await ctx.respond(
-        str(randint(smallest, highest)))
+    await ctx.respond(str(randint(smallest, highest)))
 #endregion Fun
 
+# really dangerous command, only use for testing 
 # @bot.command()
 # @commands.check(check_if_it_is_me)
 # async def cock(ctx, *, command):
