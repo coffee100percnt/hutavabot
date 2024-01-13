@@ -98,6 +98,7 @@ async def serverlang(ctx, lang):
         refresh_guildbase()
     else:
         await ctx.respond(localize.lang_not_supported[ggl(ctx)].format(ggl(ctx)))
+#endregion
 
 #region Fun
 funcategory = bot.create_group("fun", "Fun commands")
