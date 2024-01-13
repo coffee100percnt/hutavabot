@@ -1,40 +1,56 @@
-import discord
+import discord, os, pandas, json
 from discord.ext import commands
-import os
-import pandas
+import localization as localize
 from dice import roll as rollmydice
 from random import randint
 
 bot = discord.Bot()
 token = os.getenv('API_TOKEN')
 
-def check_if_it_is_me(ctx):
-    return ctx.user.id == 335102389017378818
-def torelativetime(interval):
-    a = interval.replace("d", " днів ")
-    b = a.replace("w", " тижнів ")
-    c = b.replace("h", " годин ")
-    d = c.replace("m", " хвилин ")
-    return d
-
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.MissingPermissions):
-        await ctx.send("лох без прав)))")
-    elif isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send("аргументи де")
-
 @bot.event
 async def on_ready():
+    global guildbase
+    guildbasefile = open("./guildlang.json", 'r')
+    guildbase = json.loads(guildbasefile.read())
+    guildbasefile.close()
     presence = discord.Game("фурі гей порно без смс і регістрації")
     await bot.change_presence(status=discord.Status.dnd, activity=presence) 
     print("Bot is ready!")
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.respond("лох без прав)))")
+    elif isinstance(error, commands.MissingRequiredArgument):
+        await ctx.respond("аргументи де")
+@bot.event
+async def on_guild_join(guild):
+    if str(guild.id) in guildbase:
+        pass
+    else:
+        guildbase[str(guild.id)] = "en"
 
+#get guild language
+def ggl(ctx):
+    return guildbase[str(ctx.guild.id)]
+def check_if_it_is_me(ctx):
+    return ctx.user.id == 335102389017378818
+def to_relative_time(ctx,interval):
+    interval = interval.replace("w", localize.weeks[ggl(ctx)])
+    interval = interval.replace("d", localize.days[ggl(ctx)])
+    interval = interval.replace("h", localize.hours[ggl(ctx)])
+    interval = interval.replace("m", localize.minutes[ggl(ctx)])
+    return interval
+# write result to guildbase
+def refresh_guildbase():
+    refreshedjson = json.dumps(guildbase)
+    guildbasefile = open("./guildlang.json", 'w')
+    guildbasefile.write(refreshedjson)
+    guildbasefile.close()
 
 #region Moderation
 modcategory = bot.create_group("moderation", "Commands for moderating your server")
 @modcategory.command()
-@commands.has_permissions(ban_members = True)
+@commands.has_guild_permissions(ban_members = True)
 async def ban(ctx, member:discord.Member, reason='іді нахуй'):
     await member.ban(reason=f"{reason} ({ctx.author.name})")
     await ctx.respond(f'{member.name} вигнано з сервера.')
@@ -42,7 +58,7 @@ async def ban(ctx, member:discord.Member, reason='іді нахуй'):
     await member.send(f"Ви були вигнані з {ctx.guild.name} з причини {reason}")
 
 @modcategory.command()
-@commands.has_permissions(kick_members = True)
+@commands.has_guild_permissions(kick_members = True)
 async def kick(ctx, member:discord.Member):
     await member.kick()
     await ctx.respond(f'{member.name} вигнано з сервера.')
@@ -50,30 +66,43 @@ async def kick(ctx, member:discord.Member):
     await member.send(f"Ви були вигнані {ctx.guild.name}")
 
 @modcategory.command()
-@commands.has_permissions(ban_members = True)
+@commands.has_guild_permissions(ban_members = True)
 async def unban(ctx, id):
     membr = await ctx.fetch_member(id)
     await membr.unban()
     await ctx.respond(f"{membr.name} може повертатись на сервер.")
 
 @modcategory.command()
-@commands.has_permissions(moderate_members = True)
+@commands.has_guild_permissions(moderate_members = True)
 async def mute(ctx, member:discord.Member, time="10m", reason=None):
     ttime = pandas.Timedelta(time).to_pytimedelta()
     await member.timeout_for(ttime)
-    await ctx.respond(f"{member.name} посидить {torelativetime(time)}без права голосу")
+    await ctx.respond(f"{member.name} посидить {to_relative_time(time)}без права голосу")
 
 @modcategory.command()
-@commands.has_permissions(moderate_members = True)
+@commands.has_guild_permissions(moderate_members = True)
 async def unmute(ctx, member:discord.Member):
     await member.remove_timeout()
     await ctx.respond(f"{member.name} повернено право голосу.")
 #endregion Moderation
 
+#region Settings
+settingscategory = bot.create_group("set", "setings")
+
+@settingscategory.command()
+@commands.has_guild_permissions(manage_guild = True)
+async def serverlang(ctx, lang):
+    if lang in localize.supported_languages:
+        guildbase[str(ctx.guild.id)] = lang
+        await ctx.respond(localize.lang_change_success[lang])
+        refresh_guildbase()
+    else:
+        await ctx.respond(localize.lang_not_supported[ggl(ctx)].format(ggl(ctx)))
+
 #region Fun
 funcategory = bot.create_group("fun", "Fun commands")
 
-@bot.command()
+@funcategory.command()
 async def dice(ctx, roll: str):
     await ctx.respond(
         str(rollmydice(roll)))
