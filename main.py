@@ -10,7 +10,15 @@ token = os.getenv('API_TOKEN')
 @bot.event
 async def on_ready():
     global guildbase
-    guildbasefile = open("./guildlang.json", 'r')
+    try:
+        guildbasefile = open("./guildlang.json", 'r')
+    except FileNotFoundError:
+        guildbasefile =  open("./guildlang.json", 'x')
+        guildbasefile.close()
+        guildbasefile =  open("./guildlang.json", 'w')
+        guildbasefile.write('{}')
+        guildbasefile.close()
+        guildbasefile = open("./guildlang.json", 'r')
     guildbase = json.loads(guildbasefile.read())
     guildbasefile.close()
     presence = discord.Game("фурі гей порно без смс і регістрації")
@@ -107,7 +115,7 @@ funcategory = bot.create_group("fun", "Fun commands")
 async def dice(ctx, roll: str):
     await ctx.respond(str(rollmydice(roll)))
 
-@bot.command()
+@funcategory.command()
 async def random(ctx, smallest: int, highest: int):
     await ctx.respond(str(randint(smallest, highest)))
 #endregion Fun
