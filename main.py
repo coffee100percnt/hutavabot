@@ -21,7 +21,7 @@ async def on_ready():
         guildbasefile = open("./guildlang.json", 'r')
     guildbase = json.loads(guildbasefile.read())
     guildbasefile.close()
-    presence = discord.Game("фурі гей порно без смс і регістрації")
+    presence = discord.Game("e621 - femboy male/male")
     await bot.change_presence(status=discord.Status.dnd, activity=presence) 
     print("Bot is ready!")
 @bot.event
