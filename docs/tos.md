@@ -12,7 +12,6 @@ By accessing and using Ching Bot, you agree to be bound by these Terms of Servic
 ### 2. Use of Services
 
 You agree to use Ching Bot in a manner that is lawful and respectful of others. Specifically, you agree not to:
-- Abuse, harass, threaten, or impersonate any person or entity.
 - Use Ching Bot for any illegal activities or to promote any unlawful acts.
 - Submit any content that is harmful, abusive, obscene, or otherwise objectionable.
 - Attempt to gain unauthorized access to Ching Bot’s systems or networks.
